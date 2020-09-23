@@ -134,7 +134,8 @@ import flash.media.*;
 	d.set_upState = function (value/*DisplayObject*/)/*void*/
 	{
 		this._upState = value;
-		
+		if(this._currentState == undefined) 
+			this._currentState = this._upState;
 		return value;
 	};
 	

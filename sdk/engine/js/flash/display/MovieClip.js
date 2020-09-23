@@ -30,6 +30,8 @@
 		
 		if (scene)
 		{
+			//9/2/2020 DAW: if num frames = 0 return 0
+			if(scene.numFrames == 0) return 0;
 			return this._currentFrame + 1 - scene._offset;
 		}
 		else
@@ -112,6 +114,10 @@
 		{
 			var scene = this._scenes[ i ];
 			
+			//8/28/2020 DAW: return only scene
+			if(this._scenes.length == 1 && scene._offset == 0)
+				return scene;
+
 			if (scene._offset <= this._currentFrame &&
 				this._currentFrame < scene._offset + scene.get_numFrames())
 			{

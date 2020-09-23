@@ -32,7 +32,8 @@
 	
 	d.parseXML = function (source/*String*/)/*void*/
 	{
-		if (source)
+  //8/28/2020 DAW: check source not undefined
+		if (source !== undefined)
 		{
 			this.firstChild = null;
 			this.lastChild = null;

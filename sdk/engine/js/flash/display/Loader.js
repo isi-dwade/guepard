@@ -64,7 +64,7 @@ import flash.utils.*;
 	{
 		if (context == undefined) context = null;
 		
-		console.log("load", request.get_url());
+		console.log("Loader:load", request.get_url());
 		
 		if (request.get_extension() == "swf")
 		{
@@ -191,9 +191,21 @@ import flash.utils.*;
 	{
 		this._imageObj = new Image();
 		this._imageObj.onload = flash.bindFunction(this, this._addBitmapObject);
+    //8/28/2020 DAW: check if error and assign name
+		this._imageObj.onerror = flash.bindFunction(this, this._loadError);
+		var n = source.split("/");
+		if(n.length > 0)
+			this._imageObj.name = n[n.length-1];
 		this._imageObj.src = source;
 	};
-	
+
+	d._loadError = function(e)
+	{
+    //8/28/2020 DAW: check if error and assign name
+		console.log("ERROR: unable to load " + e.currentTarget.src);
+		this.dispatchEvent(new flash.events.IOErrorEvent(flash.events.IOErrorEvent.IO_ERROR));
+	};
+
 	d._ifSWF = function (data)
 	{
 		return data.indexOf("<SWFData") != -1;
@@ -255,14 +267,14 @@ import flash.utils.*;
 		domain._setDefine(this._defineSprite);
 		domain._initAudio(this._getFolder());
 		
-		console.log("swf images = " + domain._images);
+		console.log("swf images = " + Object.keys(domain._images).length);
 		
 		this._loadSWFImage();
 	};
 	
 	d._loadSWFImage = function ()
 	{
-		this._progress(0.1 + 0.9 * flash.system.ApplicationDomain.get_currentDomain()._getloadInagesProgress());
+		this._progress(0.1 + 0.9 * flash.system.ApplicationDomain.get_currentDomain()._getloadImagesProgress());
 		
 		this._imagePath = flash.system.ApplicationDomain.get_currentDomain()._getImageForLoad();
 		
@@ -328,7 +340,7 @@ import flash.utils.*;
 		
 		this._contentLoaderInfo.set_content(this._content);
 	}
-	
+
 	d._addBitmapObject = function ()
 	{
 		var bitmapData = new flash.display.BitmapData(this._imageObj.width, this._imageObj.height, true, 0x00000000);
@@ -338,7 +350,8 @@ import flash.utils.*;
 		
 		try
 		{
-			bitmapData._initData();
+			//9/2/2020 DAW: not defined
+			//bitmapData._initData();
 		}
 		catch (e)
 		{
@@ -355,8 +368,10 @@ import flash.utils.*;
 		this._progress(1);
 		
 		this._contentLoaderInfo.set_content(this._content);
-		
-		console.log("image loaded");
+
+		//9/11/2020 DAW: dispatch COMPLETE event
+		this.dispatchEvent(new flash.events.Event(flash.events.COMPLETE));
+		console.log("image loaded " + this._imageObj.name);
 	};
 	
 	d.loadBytes = function (bytes/*ByteArray*/, context/*LoaderContext*/)/*void*/

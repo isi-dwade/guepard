@@ -196,6 +196,9 @@
 			}
 		}
 
+		if(bounds == null)
+			console.log('empty bounds');
+			
 		this._currentcontext.drawImage(
 			imageData,
 			

@@ -75,7 +75,7 @@ import flash.geom.*;
 				this._textureRect.y = 0;
 				this._textureRect.width *= scale;
 				this._textureRect.height *= scale;
-				
+
 				var context = this._bitmapData._context2d;
 				
 				var xShift = -this._canvasRect.x;
@@ -450,15 +450,19 @@ import flash.geom.*;
 		var dy = height - h;
 		
 		this._createPath(true);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.MOVE_TO);
-		this._path.data.push(
+
+		/* 8/28/2020 DAW: use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.MOVE_TO);
+		//this._path.data.push(
+		this._path.moveTo(
 			x,
 			ym
 		);
 		
-		this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
-		this._path.data.push(
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
+		//this._path.data.push(
+		this._path.cubicCurveTo(			
 			x,
 			ym - oy,
 			xm - ox,
@@ -466,15 +470,19 @@ import flash.geom.*;
 			xm,
 			y
 		);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
-		this._path.data.push(
+
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
+		//this._path.data.push(
+		this._path.lineTo(
 			xm + dx,
 			y
-		);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
-		this._path.data.push(
+		);		
+
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
+		//this._path.data.push(
+		this._path.cubicCurveTo(
 			xm + ox + dx,
 			y,
 			xe + dx,
@@ -483,14 +491,18 @@ import flash.geom.*;
 			ym
 		);
 		
-		this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
-		this._path.data.push(
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
+		//this._path.data.push(
+		this._path.lineTo(
 			xe + dx,
 			ym + dy
 		);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
-		this._path.data.push(
+
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
+		//this._path.data.push(
+		this._path.cubicCurveTo(
 			xe + dx,
 			ym + oy + dy,
 			xm + ox + dx,
@@ -498,15 +510,19 @@ import flash.geom.*;
 			xm + dx,
 			ye + dy
 		);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
-		this._path.data.push(
+
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.LINE_TO);
+		//this._path.data.push(
+		this._path.lineTo(
 			xm,
 			ye + dy
 		);
-		
-		this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
-		this._path.data.push(
+
+		/* use Proper path functions */
+		//this._path.commands.push(flash.display.GraphicsPathCommand.CUBIC_CURVE_TO);
+		//this._path.data.push(
+		this._path.cubicCurveTo(
 			xm - ox,
 			ye + dy,
 			x,
@@ -703,12 +719,16 @@ import flash.geom.*;
 					{
 						bounds.inflate(this._maxThickness, this._maxThickness);
 					}
-					
+
 					return bounds;
 				}
 			}
 		}
-		
+    //9/17/2020 DAW: if a rect exists return it
+		else if(this._textureRect)
+		{
+			return this._textureRect;
+		}
 		return null;
 	}
 	
@@ -723,6 +743,11 @@ import flash.geom.*;
 			if (!this._canvasRect)
 			{
 				this._canvasRect = this._getBoundingBox();
+				//9/16/2020 DAW: if has a textureRect, use that
+				if(this._canvasRect == null && this._textureRect)
+				{
+					this._canvasRect = this._textureRect;
+				}
 			}
 			
 			return this._canvasRect;

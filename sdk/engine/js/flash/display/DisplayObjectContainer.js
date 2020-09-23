@@ -73,6 +73,8 @@ import flash.text.*;
 		if (child == null)
 		{
 			console.error("add the object should not be null");
+      //8/28/2020 DAW: force return
+			//return;
 		}
 		
 		if (child == this)

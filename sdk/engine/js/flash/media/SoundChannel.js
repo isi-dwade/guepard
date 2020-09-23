@@ -16,7 +16,14 @@ import flash.events.*;
 	
 	d.get_leftPeak = function ()/*Number*/
 	{
-		return this._leftPeak;
+		//9/1/2020 DAW: Fake it
+		//return this._leftPeak;
+		if(this._sound && this._sound._audio && !this._sound._audio.paused) {
+			var v = com.IndividualSoftware.TypingGames.GameApp.inst().RndInRange(0, 15000) / 10000;
+			return v > 0.5 ? v-0.5 : 0;
+		} 
+		else
+			return 0;
 	};
 	
 	d.get_position = function ()/*Number*/
@@ -30,7 +37,7 @@ import flash.events.*;
 	
 	d.get_rightPeak = function ()/*Number*/
 	{
-		return this._rightPeak;
+		return this.leftPeak();
 	};
 	
 	d.get_soundTransform = function ()/*SoundTransform*/
@@ -56,6 +63,8 @@ import flash.events.*;
 		this.EventDispatcher_constructor();
 
 		this._sound = sound;
+		if(this._sound._audio)
+			this._sound._audio.onended = flash.bindFunction(this, this._ended);
 	};
 	
 	d.stop = function ()/*void*/
@@ -65,7 +74,12 @@ import flash.events.*;
 			this._sound._audio.pause();
 		}
 	};
-	
+
+	//8/28/2020 DAW: add End audio support
+	d._ended = function(evt) {
+		this.dispatchEvent(new flash.events.Event(flash.events.Event.SOUND_COMPLETE));
+	}
+
 	var s = {};
 	
 	s.__init__ = function ()

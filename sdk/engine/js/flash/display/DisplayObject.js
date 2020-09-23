@@ -526,8 +526,10 @@ import flash.geom.*;
 		
 		transform._concatenatedMatrix.copyFrom(transform._matrix);
 		transform._concatenatedColorTransform.copyFrom(transform._colorTransform);
-		
-		if (this._filters.length)
+    
+		//8/28/2020 DAW: check if filters exists
+   	//if (this._filters.length)
+		if (this._filters && this._filters.length)
 		{
 			this._concatenatedFilters = this._filters.slice();
 		}

@@ -34,10 +34,16 @@
 		return flash.utils.getDefinitionByName(name);
 	};
 	
-	d.hasDefinition = function (name/*String*/)/*Boolean*/
+	d.hasDefinition = function (name/*String*/, type/* */)/*Boolean*/
 	{
-		return false;
-		
+		//9/3/2020 DAW: if movieclip, return false
+		if(type === undefined)
+			type = br.com.stimuli.loading.BulkLoader.TYPE_MOVIECLIP;
+
+		if(type == br.com.stimuli.loading.BulkLoader.TYPE_MOVIECLIP)
+			return false;
+    //8/28/2020 DAW: check if definition exists
+		return flash.utils.getDefinitionByName(name) != null;		
 	};
 	
 	d._getImages = function ()
@@ -101,7 +107,7 @@
 		return null;
 	};
 	
-	d._getloadInagesProgress = function ()
+	d._getloadImagesProgress = function ()
 	{
 		var total = 0;
 		var loaded = 0;

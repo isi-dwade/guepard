@@ -78,6 +78,8 @@ import flash.geom.*;
 	d._linesMetrics = null;
 	d._lines = null;
 	
+	d._characterBoundaries = [];
+	
 	d._checkInteractiveEvent = function (data)
 	{
 		var bounds;
@@ -107,6 +109,16 @@ import flash.geom.*;
 		return null;
 	};
 	
+	//9/3/2020 DAW: add alwaysShowSelection property
+	d.set_alwaysShowSelection = function(value) {
+		this._alwaysShowSelection = value;
+	}
+
+	d.get_alwaysShowSelection = function ()
+	{
+		return this._alwaysShowSelection;
+	}
+
 	d.get_displayAsPassword = function ()
 	{
 		return this._displayAsPassword;
@@ -243,7 +255,33 @@ import flash.geom.*;
 	{
 		this._restrict = value;
 	}
-	
+  
+//9/11/2020 DAW: implement htmlText property
+	d.set_htmlText = function (value/*String*/)/*void*/
+	{
+		//TODO 8/28/2020 DAW:
+		if (value == null || value == undefined)
+		{
+			throw new Error("Error #2007: Parameter text must be non-null.");
+		}
+		
+		value = String(value);
+		
+		this._clear();
+		
+		this.appendText(value);
+		
+		if (this._input && this._input.value != value)
+		{
+			this._input.value = value;
+		}
+	}
+	d.get_htmlText = function ()/*String*/
+	{
+		//TODO 8/28/2020 DAW:
+		return this.get_text();
+	}
+
 	d.get_text = function ()/*String*/
 	{
 		return this._text;
@@ -437,7 +475,8 @@ import flash.geom.*;
 		{
             this._defaultTextFormat.set_color(value);
 		}
-		
+    //9/18/2020 DAW: update data
+		this._updateData(true);
 		this._canvasUpdated = false;
 	};
 	
@@ -591,7 +630,7 @@ import flash.geom.*;
 		}
 		else if (this._type == flash.text.TextFieldType.INPUT)
 		{
-			this._upateInput(matrix);
+			this._updateInput(matrix);
 		}
 	};
 	
@@ -600,7 +639,7 @@ import flash.geom.*;
 		return this._linesMetrics && this._linesMetrics.length ? this._linesMetrics[ 0 ].height : 0;
 	}
 	
-	d._upateInput = function (matrix/*Matrix*/)/*void*/
+	d._updateInput = function (matrix/*Matrix*/)/*void*/
 	{
 		var stage = this.get_stage();
 		
@@ -1561,7 +1600,8 @@ import flash.geom.*;
 		if (beginIndex == -1)
 		{
 			beginIndex = 0;
-			endIndex = this._formatedtext.length;
+			//9/16/2020 DAW: don't set to end
+			//endIndex = this._formatedtext.length;
 		}
 		
 		if (endIndex == -1)
@@ -1585,7 +1625,8 @@ import flash.geom.*;
 	
 	d.getCharBoundaries = function (charIndex/*int*/)/*Rectangle*/
 	{
-		return null;
+		//9/16/2020 DAW: implement boundary calculation
+		return this._bounds;
 	};
 	
 	d.getCharIndexAtPoint = function (x/*Number*/, y/*Number*/)/*int*/

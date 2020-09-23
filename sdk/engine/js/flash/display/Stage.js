@@ -344,13 +344,14 @@ import flash.ui.*;
 		
 		if (eventType)
 		{
+			var charCode = e.key.charCodeAt(0);
 			if (this.hasEventListener(eventType))
 			{
 				this.dispatchEvent(new flash.events.KeyboardEvent(
 					eventType,
 					true,
 					false,
-					e.charCode,
+					charCode,
 					e.keyCode,
 					e.keyLocation,
 					e.ctrlKey,

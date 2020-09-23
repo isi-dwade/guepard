@@ -22,7 +22,8 @@
 		
 		var attributes = node.get_attributes();
 		
-		if (attributes.frames) this.frames = Number(attributes.frames);
+		if (attributes.frames) 
+			this.frames = Number(attributes.frames);
 		
 		var domain = flash.system.ApplicationDomain.get_currentDomain();
 		
@@ -134,6 +135,8 @@
 					isDefine = true;
 					hasFont = true;
 					break;
+				default:
+					console.log("**** Unhandled SPRITE Tag: " + child.nodeName);
 			}
 			
 			if (TagClass)
@@ -159,8 +162,7 @@
 				
 				if (hasFont)
 				{
-					tag.setFonts(domain);
-					
+					tag.setFonts(domain);					
 				}
 			}
 		}
@@ -221,6 +223,9 @@
 		var frame = {};
 		frame.places = [];
 		frame.labels = [];
+		//9/2/2020 DAW: support sound
+		//frame.sounds = [];
+
 		frame.index = 1;
 		
 		var i;
@@ -238,14 +243,14 @@
 				
 				frames.push(frame);
 				
-				frame = new Object();
-				frame.places = places;
-				frame.labels = new Array();
+				frame = {}; //9/15/2020 DAW: removed new Object();
+				frame.places = places; 
+				frame.labels = []; //9/15/2020 DAW: removed new Array();
 				frame.index = index;
 			}
 			else if (tag instanceof flash.swf.End)
 			{
-				
+
 			}
 			else if (tag instanceof flash.swf.PlaceObject)
 			{
@@ -262,6 +267,12 @@
 			else if (tag instanceof flash.swf.FrameLabel)
 			{
 				frame.labels.push(tag.name);
+			}
+			//9/2/2020 DAW: support sound playback
+			else if(tag instanceof flash.swf.DefineSound)
+			{
+				//9/2/2020 DAW: disable for now
+				//frame.sounds.push(tag);
 			}
 		}
 		
@@ -286,12 +297,15 @@
 		
 		if (movieClip instanceof flash.display.MovieClip)
 		{
+    //9/11/2020 DAW: define frames before initScenes
+			movieClip._frames = frames;
+
 			if (defineScene)
 			{
 				d.initScenes(movieClip, defineScene);
-			}
+			}			
 			
-			movieClip._frames = frames;
+			//movieClip._frames = frames;
 			
 			if (frames.length <= 1)
 			{
@@ -326,7 +340,8 @@
 			{
 				var labelObject = defineScene.labels[ j ];
 				
-				if (sceneObject.offset <= labelObject.frame && labelObject.frame < sceneObject.offset + numFrames)
+				//9/15/2020 DAW: ignore this check. TODO figure out proper frame counting for a movieclip
+				if(true) //if (sceneObject.offset <= labelObject.frame && labelObject.frame < sceneObject.offset + numFrames)
 				{
 					var frameLabel = new flash.display.FrameLabel(
 						labelObject.name,

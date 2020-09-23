@@ -145,10 +145,7 @@ import flash.media.*;
 					{
 						place = frame.places[ i ];
 						
-						if (
-							place &&
-							place.depth == child.__depth__
-						)
+						if (place && place.depth == child.__depth__)
 						{
 							id = place.id;
 							

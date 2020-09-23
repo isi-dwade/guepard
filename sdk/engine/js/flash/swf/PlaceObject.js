@@ -11,7 +11,7 @@
 	d.colorTransform = null;
 	d.filters = null;
 	d.name = null;
-	
+	d.move = false;
 	
 	d.PlaceObject = function ()
 	{
@@ -28,7 +28,8 @@
 		if (attributes.depth) this.depth = Number(attributes.depth);
 		if (attributes.name) this.name = String(attributes.name);
 		if (attributes.mask) this.mask = Number(attributes.mask);
-		
+		if (attributes.move) this.move = String(attributes.move);
+
 		var childNodes = node.get_childNodes();
 		
 		for (var i = 0; i < childNodes.length; i++)
