@@ -349,7 +349,8 @@ package com.guepard.parser.serialization
 			
 			for each(var e:ExpressionInfo in expression.body)
 			{
-				setAnvancedContext(e, info, name);
+				if(e != null) //7/24/2020 DAW: don't process null
+					setAnvancedContext(e, info, name);
 			}
 			
 			if (expression.child)
@@ -1369,7 +1370,11 @@ package com.guepard.parser.serialization
 				expression.parent.tokenData == "as" &&
 				expression.parent.parent)
 			{
-				expression.parent.parent.context = expression.context.child.clone();
+				//7/24/2020 DAW: check child
+				if(expression.context.child != null)
+					expression.parent.parent.context = expression.context.child.clone();
+				else
+					expression.parent.parent.context = expression.context.clone();
 			}
 		}
 		
@@ -1579,7 +1584,11 @@ package com.guepard.parser.serialization
 				if (importInfo.isFunction)
 				{
 					importName.data = "Function";
-					importName.child = importInfo.constructor.type.clone();
+					//7/24/2020 DAW: wildcard return type
+					if(importInfo.constructor.type == null)
+						importName.child = new NamespaceInfo("*");
+					else
+						importName.child = importInfo.constructor.type.clone();
 					expression.tag = importInfo.fullNamespace.clone();
 				}
 				else

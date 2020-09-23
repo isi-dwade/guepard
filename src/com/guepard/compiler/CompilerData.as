@@ -74,7 +74,9 @@ package com.guepard.compiler
 				token = reader.stream;
 				
 				//TODO: multiply classes
-				if (reader.classes.length)
+				//8/6/2020 DAW:check for null
+				//if (reader.classes.length)
+				if (reader.classes!=null && reader.classes.length)
 				{
 					info = reader.classes[0];
 					

@@ -705,7 +705,10 @@ package com.guepard.parser.serialization
 								
 								stream.writeSymbol(expression.context ? expression.context.name : "Object", "_");
 								
-								if (expression.child.type == ExpressionType.RUN)
+								//7/24/2020 DAW: check if child not null
+								if(expression.child == null)
+									trace("expression.child == null");								
+								else if (expression.child.type == ExpressionType.RUN)
 								{
 									stream.writeSymbol("constructor");
 								}
